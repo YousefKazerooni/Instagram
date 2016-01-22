@@ -20,7 +20,7 @@ class PhotosViewController: UIViewController, UITableViewDataSource, UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.dataSource = self
+        
         tableView.delegate = self
         
         tableView.rowHeight = 320 //set static row height to the table view
@@ -41,7 +41,9 @@ class PhotosViewController: UIViewController, UITableViewDataSource, UITableView
                     if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
                         data, options:[]) as? NSDictionary {
                             NSLog("response: \(responseDictionary)")
+                            
                             self.instagram = responseDictionary["data"] as? [NSDictionary]
+                            self.tableView.dataSource = self
                             self.tableView.reloadData()
                     }
                 }
@@ -55,7 +57,13 @@ class PhotosViewController: UIViewController, UITableViewDataSource, UITableView
         // Dispose of any resources that can be recreated.
     }
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
-        return 20
+        if let instagram = instagram {
+            return instagram.count
+        }
+        else {
+            return 0
+        }
+
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
